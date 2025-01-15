@@ -2,7 +2,7 @@ import {verify} from 'hono/jwt'
 import { PrismaClient } from '@prisma/client/edge'; 
 import { withAccelerate } from '@prisma/extension-accelerate';
 
-export default async function auth (c:any , next :any ) {
+export default async function auth ( c:any , next :any ) {
     try { 
         const authToken = await c.req.header("Authorization").split(" ")[1];
         const jwt = await verify(authToken , c.env.JWT_SECRET);
@@ -20,7 +20,8 @@ export default async function auth (c:any , next :any ) {
                 message : "UnAuth user"
             })
         }
-         next()
+        c.set("userId" , user.id)
+        await next()
     } catch(e) {
         c.status(403)
         return c.json({

@@ -36,3 +36,22 @@ app.get('*', async c => {
 make sure 
 import { PrismaClient } from '@prisma/client/edge'
 edge not extension
+
+
+## unsuccessfull attempt
+let cachedEnvVars: { [key: string]: string } = {};
+
+app.get('/', async (c) => {
+  cachedEnvVars = {
+    DATABASE_URL : c.env.DATABASE_URL
+  }
+  return c.json({
+    message : "res"
+  })
+})
+
+const prisma = new PrismaClient({
+  datasourceUrl : cachedEnvVars.DATABASE_URL
+})
+
+## route /bulk above /:id 
