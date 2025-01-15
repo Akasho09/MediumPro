@@ -1,14 +1,19 @@
 import { Hono } from 'hono'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-import { sign } from 'hono/jwt'
+import { sign , verify } from 'hono/jwt'
+import auth2 from './middlewares/jwtAuth' 
 
 const app = new Hono<{
   Bindings :{
     DATABASE_URL : string,
-    JWT_SECRET : string
+    JWT_SECRET : string,
+    id2 : string
+    // jwtToken :string
   }
 }>()
+
+app.use('/api/v1/blog/*' , auth2 )
 
 app.get('/', async (c) => {
   return c.json({
@@ -17,35 +22,66 @@ app.get('/', async (c) => {
 })
 
 app.post('/api/v1/signup' , async (c)=>{
-  const body = await c.req.json();
-console.log(body)
-
-const prisma = new PrismaClient({
-  datasourceUrl: "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiZTc3YjA5NzgtODAwMy00NzEzLTgwNmYtNzU3OWQ5YzUwM2Y5IiwidGVuYW50X2lkIjoiMzVkY2Q3ZTViMjRkMTMxNDZjYjJmMTQ5NzFhM2IyZDdlNDYxZjg0ZDM0MTM1OTk3NWFlNWQ3NDA2MDE2ZTA4NSIsImludGVybmFsX3NlY3JldCI6IjcyYjk3MzdkLWZmYTItNDY2YS1iZGE0LWVkMGExNDRmNmZkMiJ9.RrjdQwdkw6jL-q5zkZngGhNzwbjJsl2KoyzSKlirTCU"
-}).$extends(withAccelerate());
-
- console.log("body")
-
-  const res = await prisma.usertable.create({
-    data: {
-      email : body.email,
-      name : body.name,
-      password : body.password
-     }
-  })
-
-  const token = await sign( { id : res.id } , "c.env.JWT_SECRET");
-  return c.json({
-    jwt : token
-  })
+  try {
+    const prisma = new PrismaClient({
+      datasourceUrl: c.env.DATABASE_URL
+    }).$extends(withAccelerate());
+    
+    const body = await c.req.json();
+      const res = await prisma.usertable.create({
+        data: {
+          email : body.email,
+          name : body.name,
+          password : body.password
+         }
+      })
+    
+      const token = await sign( { id : res.id } , c.env.JWT_SECRET);
+      return c.json({
+        jwt : token
+      })
+  }catch(e){
+    console.log("Aii hayee errorr")
+    c.status(403)
+    return c.json({
+      message : "lafda hogaya jii",
+      err : e
+    })
+  }
 })
 
-app.post("/api/v1/signin" , (c)=>{
-  return c.text('Hello Hono!');
-
+app.post("/api/v1/signin" , async (c)=>{
+  try {
+    const body = await c.req.json();
+    const prisma = new PrismaClient({
+      datasourceUrl : c.env.DATABASE_URL
+    }).$extends(withAccelerate())
+   
+    const user = await prisma.usertable.findUnique({
+      where:{
+        email : body.email,
+        password : body.password
+      }, select:{
+        name : true,
+        id : true
+      }
+    })
+  
+    if(user) {
+      const jwt = await sign({id: user.id} ,c.env.JWT_SECRET)
+      return c.json({
+        message : "Welcome " + user.name,
+        jwt : jwt
+      })
+    }
+  }catch(e){ 
+    c.status(403)
+    return c.text('bahar jaiye aap plz ' + e);
+  }
 })
 
 app.post("/api/v1/blog" , (c)=>{
+
   return c.text('Hello Hono!');
 
 })

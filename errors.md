@@ -30,3 +30,9 @@ app.get('*', async c => {
 - specify type of  Database_url
 
 
+## REMOVE FKIN HASHES FROM .toml
+##       id : id.id as string
+## ✘ [ERROR] Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
+make sure 
+import { PrismaClient } from '@prisma/client/edge'
+edge not extension
