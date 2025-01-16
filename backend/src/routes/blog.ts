@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import auth from "../middlewares/jwtAuth";
 import { PrismaClient } from "@prisma/client/edge"; 
+import { blogPost , blogPostUpdate } from "@akash.09/mediumprocommon"; 
 
 const blogRouter = new Hono<{
     Bindings: {
@@ -16,6 +17,8 @@ blogRouter.use(auth)
 blogRouter.post("/" , async (c)=>{
     try {
         const body = await c.req.json();
+        const zodH = blogPost.safeParse(body);
+        if(!zodH.success){ return c.json({ message: zodH.error }) }
         const akash = new PrismaClient({
             datasourceUrl : c.env.DATABASE_URL
         })
@@ -36,6 +39,8 @@ blogRouter.post("/" , async (c)=>{
 blogRouter.put("/" , async (c)=>{
     try {
         const body = await c.req.json();
+        const zodH = blogPostUpdate.safeParse(body);
+        if(!zodH.success){ return c.json({ message: zodH.error }) }
         const akash = new PrismaClient({
             datasourceUrl : c.env.DATABASE_URL
         })

@@ -1,11 +1,11 @@
 import {z} from 'zod'
 
-export const signInInput = z.object({
+export const signInInput2 = z.object({
     email : z.string().min(3).max(30),
     password: z.string()
 })
 
-export type signInInput = z.infer<typeof signInInput>
+export type signInInput = z.infer<typeof signInInput2>
 
 export const signUpInput = z.object({
     name : z.string().min(3).max(20),

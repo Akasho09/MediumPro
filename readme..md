@@ -39,7 +39,8 @@ npm install @prisma/extension-accelerate
 - add JWT 
   const token = await sign( res.id , c.env.JWT_SECRET);
 c.env.JWT_SECRET IN wranglar.toml
-
+6. common zod 
+npm i @akash.09/mediumprocommon
 
 ## after deploy 
 requests can be sent from cloudfare url also
