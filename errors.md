@@ -55,3 +55,16 @@ const prisma = new PrismaClient({
 })
 
 ## route /bulk above /:id 
+
+
+##         c.status(401)
+        return c.json({ error : zodH.data })
+
+writing try and catch , catches errror at c.status and error message isnt recieved 
+
+
+## return c.json(zodH.error, 401)
+catches error 
+
+
+##  className={`w-full bg-transparent placeholder:text-slate-400 text-${color}-700 text-sm border border--200 rounded-md px-1 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow`}

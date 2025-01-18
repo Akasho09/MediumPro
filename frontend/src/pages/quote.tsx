@@ -1,11 +1,14 @@
 
 export const Quote= ()=>{
-  return <div className="invisible lg:visible text-blue-950 w-3/5 h-full flex items-center justify-center h-5/6 border border-black">
-    <div><h4 className="text-2xl font-bold ">Welcome to the Portal , Quote is here .</h4>
+  return (
+    <>
+   <div><h4 className="text-2xl font-bold ">Welcome to the Portal , Quote is here .</h4>
      <b>author ,</b>
      <h6 className="underline decoration-sky-500 font-light">additional</h6>
-     </div> 
-   </div>
+     </div>  
+    </>
+  )
+    
 } 
 
 /*

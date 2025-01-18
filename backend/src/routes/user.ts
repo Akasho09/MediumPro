@@ -14,12 +14,14 @@ const userRouter = new Hono<{
 userRouter.post('/signup' , async (c)=>{
     try {
       const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL
-      }).$extends(withAccelerate());
-  
+        datasourceUrl : c.env.DATABASE_URL
+      }).$extends(withAccelerate())
       const body = await c.req.json();
+      console.log(body)
       const zodH = signUpInput.safeParse(body);
-      if(!zodH.success){ return c.json({ message: zodH.error }) }
+      if(!zodH.success){
+        return c.json(zodH.error)
+      }
         const res = await prisma.usertable.create({
           data: {
             email : body.email,
@@ -27,21 +29,26 @@ userRouter.post('/signup' , async (c)=>{
             password : body.password
            }
         })
-        const token = await sign( { id : res.id } , c.env.JWT_SECRET);
+        console.log("here 2")
+        const token = await sign({ id : res.id } , c.env.JWT_SECRET);
         return c.json({
           message : "Signed Up!",
           jwt : token
         })
     } catch(e){
-      return c.json({ message : "lafda hogaya jii", err : e })
+      return c.json({ error : "lafda hogaya jii", err : e })
     }
   })
   
   userRouter.post("/signin" , async (c)=>{
     try {
       const body = await c.req.json();
+      console.log(body)
       const zodH = signInInput.safeParse(body);
-      if(!zodH.success){ return c.json({ message: zodH.error }) }
+      if(!zodH.success){ 
+        c.status(400)
+        return c.json({ message: zodH.error }) 
+      }
       const prisma = new PrismaClient({
         datasourceUrl : c.env.DATABASE_URL
       }).$extends(withAccelerate())

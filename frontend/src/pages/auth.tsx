@@ -1,37 +1,92 @@
-import { useState } from "react"
+import { useState, useEffect , useRef} from "react"
 import { Button } from "../components/button"
 import { LabelledInput } from "../components/LabelledInput"
 import { signUpInput } from "@akash.09/mediumprocommon"
+import axios from "axios"
+import { BACKEND_URL } from "../config"
+import { useNavigate } from "react-router-dom"
 
 export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
+    const navigate = useNavigate();
+    const [color , setColor] = useState<"red" | "slate" >("red")
+    const isFirstRender = useRef(true); // Use a ref to track first render
     const [inputs,setInputs] = useState<signUpInput>({
         name: "",
         email : "",
         password: ""
     }) 
-    const handleClick = (e:React.MouseEvent<HTMLButtonElement>)=>{
-            console.log("Button clicked!", e);
+    const handleClick = async ()=>{
+       try{
+        console.log(inputs)
+        await axios.post(`${BACKEND_URL}/api/v1/user/${type==="signIn" ? 'signin' : 'signup' }`,inputs)
+        .then((res )=>{
+            if(res.data.jwt){
+                localStorage.setItem('jwt' , res.data.jwt);
+                navigate('/blogs')
+                alert(res.data.message)
+                console.log("Button clicked!");
+            } else {
+                alert("Error : " + res.data.issues[0].message)
+            }
+        })
+       } catch (e){
+        console.log(e)
+        alert("Error : " + e)
+       }
     }
-    return <div className="flex items-center justify-center rounded-lg px-8 py-6 bg-white shadow-lg w-2/5">
-        <div className="border border-black w-2/3 p-4 rounded-md">
-        <h4>Create an Account</h4>
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+          }
+        try {
+        if (!inputs.email) return;
+          const int = setTimeout( async ()=>{
+            const userr = await axios.get(`${BACKEND_URL}/api/v1/userfind/${inputs.email}`,);
+                if(userr.data==="chlo oii"){ setColor("red") }
+            else setColor("slate")
+        },500)
+           return ()=>{
+            clearTimeout(int)
+           }
+        } 
+          catch (error) {
+            console.error("Error fetching users:", error);
+          }
+    },[inputs.email])
+    // useEffect(()=>{}, [color])
+
+
+    return (
+        <> <div className="w-2/3 border border-black rounded-md p-10 pt-4 pb-6">
+        <h4 className="font-bold text-center text-xl py-3 pt-0">{type==="signIn" ? "Login" : "Create an Account"}</h4>
         <div > {type==="signIn" ? "Don't have a account! "  : "Already have a Account! " }
              <a href={type==="signIn" ? "/signup" : "signin"} className="font-bold ">{type==="signIn" ? "  Sign Up" : "  Sign in"}</a>
         </div>
-        <LabelledInput label="Username" placeholder="username" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-            setInputs({
+        
+        {type=="signIn" ? null : <LabelledInput 
+        color={"slate"} type="text" required={true} label={"Username "} placeholder="username" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+                        setInputs({
                 ...inputs,
                 name : e.target.value
             })
+
             // check if name is available // after 1s of not typing
-        }}></LabelledInput>
-        <LabelledInput label="Email" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-                setInputs({
+        }}
+        ></LabelledInput>  }
+
+
+        <LabelledInput
+        color={color} type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+            setInputs({
                     ...inputs,
                     email : e.target.value
                 })
-        }}></LabelledInput>
-        <LabelledInput label="Password" placeholder="" onChange={(e:any)=>{
+        }}>
+        </LabelledInput>
+        <LabelledInput 
+        color={"slate"} type="password" required={true} label="Password *" placeholder="" onChange={(e:any)=>{
                 setInputs({
                     ...inputs,
                     password : e.target.value
@@ -40,9 +95,6 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
         <Button onClick={handleClick} children="Submit">
         </Button>
         </div>
-            {/* <label htmlFor="">Username</label><input type="text" classNameName="border border-gray-300 rounded-md w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <label htmlFor="">Email</label><input type="text" classNameName="border border-gray-300 rounded-md w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/>
-            <label htmlFor="">Password</label><input type="text" classNameName="border border-gray-300 rounded-md w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"/> */}
-        </div>
+        </>)
 }
 

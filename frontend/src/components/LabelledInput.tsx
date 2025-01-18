@@ -3,18 +3,23 @@ import { ChangeEvent } from "react"
 interface LabelledInput  {
     label : string ,
     placeholder : string , 
-    onChange :  (e:ChangeEvent<HTMLInputElement>)=> void
+    onChange :  (e:ChangeEvent<HTMLInputElement>)=> void,
+    required: boolean,
+    type : string,
+    color : "red" | "slate"
 }
 
-export function LabelledInput({ label, placeholder, onChange }: LabelledInput) {
+export function LabelledInput({ label, placeholder, onChange , required , type , color }: LabelledInput) {
     return (
         <div>
             <div className="w-full min-w-[200px] py-2">
-                <label className="block mb-2 text-sm text-slate-600">{label}</label>
+                <label className={`block mb-2 text-sm text-${color}-600`}>{label}</label>
                 <input
-                    className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-1 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    type={type}
+                    className={`w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border--200 rounded-md px-1 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow`}
                     placeholder={placeholder}
                     onChange={onChange}
+                    required = {required}
                 />
             </div>
         </div>
