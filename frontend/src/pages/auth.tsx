@@ -21,7 +21,7 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
         await axios.post(`${BACKEND_URL}/api/v1/user/${type==="signIn" ? 'signin' : 'signup' }`,inputs)
         .then((res )=>{
             if(res.data.jwt){
-                localStorage.setItem('jwt' , res.data.jwt);
+                localStorage.setItem('jwt' , ( "Bearer "  +res.data.jwt ));
                 navigate('/blogs')
                 alert(res.data.message)
                 console.log("Button clicked!");
@@ -44,8 +44,9 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
         if (!inputs.email) return;
           const int = setTimeout( async ()=>{
             const userr = await axios.get(`${BACKEND_URL}/api/v1/userfind/${inputs.email}`,);
-                if(userr.data==="chlo oii"){ setColor("red") }
-            else setColor("slate")
+            console.log(userr.data)
+                if(userr.data=="chlo oii"){ setColor("red") }
+                else setColor("slate")
         },500)
            return ()=>{
             clearTimeout(int)
@@ -54,6 +55,7 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
           catch (error) {
             console.error("Error fetching users:", error);
           }
+
     },[inputs.email])
     // useEffect(()=>{}, [color])
 
@@ -78,7 +80,7 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
 
 
         <LabelledInput
-        color={color} type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+         color = { type=="signUp" ? color : "slate" } type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
             setInputs({
                     ...inputs,
                     email : e.target.value

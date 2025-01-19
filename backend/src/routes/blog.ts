@@ -66,15 +66,25 @@ blogRouter.get("/bulk" , async (c)=>{
         const akash = new PrismaClient({
             datasourceUrl : c.env.DATABASE_URL
         })
-        const blog = await akash.posts.findMany()
+        const blog = await akash.posts.findMany({
+            select : {
+                id : true,
+                title:true,
+                content : true,
+                author :{
+                    select: {
+                        name : true,
+                    }
+                }
+            }
+        })
         return c.json({
             blog : blog
         }); 
-    }catch(e){
+    } catch(e){
         c.status(411)
         return c.json("error")  
     }
-
 })
 
 blogRouter.get( "/:id", async (c)=>{
