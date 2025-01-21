@@ -12,8 +12,6 @@ export const Mainnnn = ()=>{
       if(loading){
         return <div>Loading....</div>
       }
-      console.log(postss)
-
     return  <div className='grid grid-cols-3'>
               <div className='col-span-3 max-h-5px m-0 p-0'><TopBar></TopBar></div>
               <div className='col-span-3 flex justify-center'><Subs></Subs></div>
@@ -24,12 +22,13 @@ export const Mainnnn = ()=>{
               </div>
               <div className="">
               {postss.map(p => (
-       <Link to="/blog/ids"  ><div className=''><Posts 
+       <Link to={`/blog/${p.id}`}  ><div className=''><Posts 
        key={p.id} 
        desc={p.content} 
        title={p.title} 
        author={p.author?.name || "Unknown Author"} 
-   /></div></Link> 
+   /></div>
+  </Link> 
     ))}
               </div>
               </div>

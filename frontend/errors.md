@@ -27,3 +27,6 @@ body {
 
 ##         const userr = await axios.get(`${BACKEND_URL}/api/v1/userfind/${e.target.value}`,);
 WTF 
+
+
+##       <Link to={``}  ><div className=''><Posts 

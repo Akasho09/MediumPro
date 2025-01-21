@@ -22,14 +22,12 @@ import { BlogHai } from './empS/SpecificBlog'
 
 
         <Route path="/blogs" element={<Mainnnn/>}></Route>
+        <Route path="/blog/:id" element={<BlogHai/>}></Route>
         <Route path="/" element={<Mainnnn/>}></Route>
-        <Route path='/blog/ids' element={<div><BlogHai/></div>}></Route>
         <Route path="/create" element={<div><Create/></div>}></Route>
         </Routes>
-
         </BrowserRouter>
     </>
-
   )
 }
 

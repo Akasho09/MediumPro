@@ -91,13 +91,24 @@ blogRouter.get("/bulk" , async (c)=>{
 
 blogRouter.get( "/:id", async (c)=>{
     try {
+        console.log("ere")
         const id = c.req.param("id")
         const akash = new PrismaClient({
             datasourceUrl : c.env.DATABASE_URL
         })
-        const blog = await akash.posts.findFirst({
+        const blog = await akash.posts.findUnique({
             where:{
                 id: id
+            },
+            select: {
+                id : true, 
+                title :  true,  
+                content : true ,
+               author  : { 
+                select : {
+                    name : true 
+                }
+               }    
             }
         })
         return c.json({

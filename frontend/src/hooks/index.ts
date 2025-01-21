@@ -11,6 +11,30 @@ interface postInter {
   content : string 
 }
 
+export const useBlog = ({id} : {id:string})=>{
+  const [blog,setBlog] = useState<postInter>()
+  const [loading , setLoading] = useState(true)
+
+  useEffect(()=>{
+   axios.get(`${BACKEND_URL}/api/v1/blog/${id}` ,
+    {
+      headers:{
+        Authorization: localStorage.getItem("jwt")
+      }
+    }
+   )
+   .then((res)=>{
+    console.log("id : " , id) 
+    setBlog(res.data.blog)
+    console.log("data : " , res.data)
+    setLoading(false)
+   })  
+  },[])
+
+return { blog,loading }
+}
+
+
 export const  useBlogs = ()=>{
     const [postss, setPosts] = useState<postInter[]>([
         {
@@ -65,7 +89,6 @@ export const  useBlogs = ()=>{
                 Authorization : localStorage.getItem('jwt')
             }
           })
-        console.log(res.data.blog)
         setPosts(prevPosts => [...prevPosts, ...res.data.blog]);
           // author : res.data.blog.author.name ,
           // title  : res.data.blog.title , 
