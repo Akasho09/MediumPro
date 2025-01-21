@@ -5,6 +5,7 @@ import Right from '../components/Right'
 import Posts from '../pages/Posts'
 import Hashes from '../components/Hashes'
 import {useBlogs} from '../hooks/index' 
+import { Link } from 'react-router-dom'
 
 export const Mainnnn = ()=>{
       const { postss, loading } = useBlogs();
@@ -23,12 +24,12 @@ export const Mainnnn = ()=>{
               </div>
               <div className="">
               {postss.map(p => (
-        <div className=''><Posts 
-        key={p.id} 
-        desc={p.content} 
-        title={p.title} 
-        author={p.author?.name || "Unknown Author"} 
-    /></div>
+       <Link to="/blog/ids"  ><div className=''><Posts 
+       key={p.id} 
+       desc={p.content} 
+       title={p.title} 
+       author={p.author?.name || "Unknown Author"} 
+   /></div></Link> 
     ))}
               </div>
               </div>

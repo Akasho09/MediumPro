@@ -3,7 +3,8 @@ import { BrowserRouter ,  Route , Routes } from 'react-router-dom'
 import { Quote } from './pages/quote'
 import { Auth } from './pages/auth'
 import { Mainnnn } from './empS/mainnnn'
-
+import { Create } from './pages/Create'
+import { BlogHai } from './empS/SpecificBlog'
  function App() {
   return (
     <>
@@ -19,9 +20,13 @@ import { Mainnnn } from './empS/mainnnn'
         <div className='lg:col-span-2 flex justify-center items-center invisible lg:visible'><Quote ></Quote></div></div>}>
         </Route>
 
+
         <Route path="/blogs" element={<Mainnnn/>}></Route>
         <Route path="/" element={<Mainnnn/>}></Route>
+        <Route path='/blog/ids' element={<div><BlogHai/></div>}></Route>
+        <Route path="/create" element={<div><Create/></div>}></Route>
         </Routes>
+
         </BrowserRouter>
     </>
 

@@ -17,8 +17,10 @@ blogRouter.use(auth)
 blogRouter.post("/" , async (c)=>{
     try {
         const body = await c.req.json();
+        console.log(body)
         const zodH = blogPost.safeParse(body);
-        if(!zodH.success){ return c.json({ message: zodH.error }) }
+        // authorId isnt required 
+        // if(!zodH.success){ return c.json({ message: zodH.error }) }
         const akash = new PrismaClient({
             datasourceUrl : c.env.DATABASE_URL
         })
