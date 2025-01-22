@@ -4,7 +4,7 @@ export const MainnSkeleton = () => {
   return (
     <div
       role="status"
-      className=" grid grid-rows-16 gap-4 m-40 mt-0 h-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700"
+      className=" grid grid-rows-16 gap-4 m-40 mt-0 h-full p-4 space-y-4 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700"
     >
         {/* Top Rows */}
         <div className="row-span-2 bg-gray-300 dark:bg-gray-600"></div>
