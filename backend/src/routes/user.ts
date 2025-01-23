@@ -17,10 +17,9 @@ userRouter.post('/signup' , async (c)=>{
         datasourceUrl : c.env.DATABASE_URL
       }).$extends(withAccelerate())
       const body = await c.req.json();
-      console.log(body)
       const zodH = signUpInput.safeParse(body);
       if(!zodH.success){
-        return c.json(zodH.error)
+        return c.json( {message : zodH.error.issues[0].message})
       }
         const res = await prisma.usertable.create({
           data: {
@@ -29,7 +28,6 @@ userRouter.post('/signup' , async (c)=>{
             password : body.password
            }
         })
-        console.log("here 2")
         const token = await sign({ id : res.id } , c.env.JWT_SECRET);
         return c.json({
           message : "Signed Up!",
@@ -46,8 +44,7 @@ userRouter.post('/signup' , async (c)=>{
       console.log(body)
       const zodH = signInInput.safeParse(body);
       if(!zodH.success){ 
-        c.status(400)
-        return c.json({ message: zodH.error }) 
+        return c.json({message : zodH.error.issues[0].message}) 
       }
       const prisma = new PrismaClient({
         datasourceUrl : c.env.DATABASE_URL
@@ -66,7 +63,6 @@ userRouter.post('/signup' , async (c)=>{
         const jwt = await sign({id: user.id} ,c.env.JWT_SECRET)
         return c.json({ message : "Welcome " + user.name, jwt : jwt }) 
       }else{
-        c.status(403) 
         return c.json({ message : "Invalid email or password" }) 
       }
     } catch(e){ 

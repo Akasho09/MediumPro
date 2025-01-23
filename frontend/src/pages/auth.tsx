@@ -14,23 +14,20 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
         name: "",
         email : "",
         password: ""
-    }) 
+    })
     const handleClick = async ()=>{
        try{
-        console.log(inputs)
         await axios.post(`${BACKEND_URL}/api/v1/user/${type==="signIn" ? 'signin' : 'signup' }`,inputs)
         .then((res )=>{
             if(res.data.jwt){
                 localStorage.setItem('jwt' , ( "Bearer "  +res.data.jwt ));
                 navigate('/blogs')
                 alert(res.data.message)
-                console.log("Button clicked!");
             } else {
-                alert("Error : " + res.data.issues[0].message)
+                alert("Error : " + res.data.message)
             }
         })
        } catch (e){
-        console.log(e)
         alert("Error : " + e)
        }
     }
@@ -44,7 +41,6 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
         if (!inputs.email) return;
           const int = setTimeout( async ()=>{
             const userr = await axios.get(`${BACKEND_URL}/api/v1/userfind/${inputs.email}`,);
-            console.log(userr.data)
                 if(userr.data=="chlo oii"){ setColor("red") }
                 else setColor("slate")
         },500)
@@ -57,7 +53,6 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
           }
 
     },[inputs.email])
-    // useEffect(()=>{}, [color])
 
 
     return (

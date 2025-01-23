@@ -14,7 +14,8 @@ interface postInter {
 export const useBlog = ({id} : {id:string})=>{
   const [blog,setBlog] = useState<postInter>()
   const [loading , setLoading] = useState(true)
-
+  
+  
   useEffect(()=>{
    axios.get(`${BACKEND_URL}/api/v1/blog/${id}` ,
     {

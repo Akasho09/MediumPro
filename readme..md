@@ -45,3 +45,7 @@ npm i @akash.09/mediumprocommon
 ## after deploy 
 requests can be sent from cloudfare url also
 
+
+## Avatar initials iff jwt username also ...
+
+

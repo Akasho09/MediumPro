@@ -1,7 +1,6 @@
 
 import TopBar from '../pages/TopBar'
 import Subs from '../components/Subs'
-import Right from '../components/Right'
 import Posts from '../pages/Posts'
 import Hashes from '../components/Hashes'
 import {useBlogs} from '../hooks/index' 
@@ -10,13 +9,13 @@ import { MainnSkeleton } from './Mainnskelton'
 export const Mainnnn = ()=>{
       const { postss, loading } = useBlogs();
       if(loading){
-        return <div><MainnSkeleton></MainnSkeleton></div>
+        return <MainnSkeleton></MainnSkeleton>
       }
     return  <div className='grid grid-cols-3'>
               <div className='col-span-3 max-h-5px m-0 p-0'><TopBar></TopBar></div>
               <div className='col-span-3 flex justify-center'><Subs></Subs></div>
              <div className='col-span-3 grid grid-cols-10'>
-             <div className='col-start-2 col-span-6 flex flex-col'>
+             <div className='col-start-3 col-span-6 flex flex-col'>
               <div className=' border-b'>
               <Hashes r1="Web D" r2="Web D2" r3="web 3"></Hashes>
               </div>
@@ -34,7 +33,6 @@ export const Mainnnn = ()=>{
     ))}
               </div>
               </div>
-              <div className='col-span-2'><Right></Right>right</div>
              </div>
               </div>
 }
