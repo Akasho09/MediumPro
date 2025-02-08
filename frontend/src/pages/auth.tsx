@@ -8,13 +8,14 @@ import { useNavigate } from "react-router-dom"
 
 export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
     const navigate = useNavigate();
-    const [color , setColor] = useState<"red" | "slate" >("red")
+    const [color , setColor] = useState<"red" | "slate" >("slate")
     const isFirstRender = useRef(true); // Use a ref to track first render
     const [inputs,setInputs] = useState<signUpInput>({
         name: "",
         email : "",
         password: ""
     })
+
     const handleClick = async ()=>{
        try{
         await axios.post(`${BACKEND_URL}/api/v1/user/${type==="signIn" ? 'signin' : 'signup' }`,inputs)
@@ -75,7 +76,7 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
 
 
         <LabelledInput
-         color = { type=="signUp" ? color : "slate" } type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+         color ={color} type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
             setInputs({
                     ...inputs,
                     email : e.target.value
