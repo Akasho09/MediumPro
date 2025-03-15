@@ -77,3 +77,10 @@ same issue on versel
 ## vercel not versel
 all routes should be redirected to .html 
 
+## tahir zuk sund error
+PrismaClientKnownRequestError: 
+
+  Invalid `prisma.user.findUnique()` invocation:
+  
+  - use neon in prisma forst cxotla 
+  

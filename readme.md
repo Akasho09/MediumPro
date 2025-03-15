@@ -73,3 +73,6 @@ requests can be sent from cloudfare url also
 ## Avatar initials iff jwt username also ...
 
 
+## SETUP DOCCKER 
+- docker build -t mpro .
+- docker run -p 3000:3000 -p 3001:3001 mpro
