@@ -76,7 +76,7 @@ export const Auth = ({type} : {type: "signIn" | "signUp" })=>{
 
 
         <LabelledInput
-         color ={color} type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
+         color = {type=="signUp" ? color : "slate"}  type="email" required = {true} label="Email *" placeholder="akash@gmail.com" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
             setInputs({
                     ...inputs,
                     email : e.target.value
