@@ -8,7 +8,7 @@ interface postInter {
     name : string
   } , 
   title  : string , 
-  content : string 
+  content : JSON
 }
 
 export const useBlog = ({id} : {id:string})=>{
