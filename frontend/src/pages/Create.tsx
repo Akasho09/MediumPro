@@ -42,18 +42,15 @@ export const Create = () => {
   });
 
   const [totalContent, setTC] = useState<DynamicTextProps[]>([]);
-
   const Navigate = useNavigate();
 
   const toggleFormat = (formatClass: string, tagType: keyof JSX.IntrinsicElements) => {
-      setTC((prev) => [...prev, inputDetails]);
-
+    setTC((prev) => [...prev, inputDetails]);
     setActiveFormats((prev) =>
       prev.includes(formatClass)
         ? prev.filter((cls) => cls !== formatClass)
         : [...prev, formatClass]
     );
-
     setInputDetails({
       tag: tagType,
       className: formatClass,
@@ -63,20 +60,11 @@ export const Create = () => {
 
   async function handleClick(e: React.FormEvent) {
     e.preventDefault();
-
-
     try {
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/blog`,
-        {
-          title,
-          content: totalContent,
-        },
-        {
-          headers: {
-            Authorization: localStorage.getItem("jwt"),
-          },
-        }
+        { title, content: totalContent },
+        { headers: { Authorization: localStorage.getItem("jwt") } }
       );
       Navigate("/blogs");
       console.log(res);
@@ -86,35 +74,33 @@ export const Create = () => {
   }
 
   return (
-    <div className="min-h-screen text-gray-800">
+    <div className="min-h-screen text-gray-800 bg-gray-50">
       <TopBar />
       <main className="container mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold text-center mb-6">
-          Create a New Blog Post
-        </h2>
+        <h2 className="text-4xl font-extrabold text-center text-blue-400 mb-8">Create a New Blog Post</h2>
 
-        <div className="max-w-5xl mx-auto p-6">
+        <div className="max-w-5xl mx-auto bg-slate-250 p-8 shadow-lg rounded-lg space-y-8">
           <form onSubmit={handleClick} className="space-y-6">
-            <div>
-              <input
-                type="text"
-                id="title"
-                className="border-l-2 text-4xl tracking-wider capitalize p-4 outline-none w-full"
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Title"
-                required
-              />
-            </div>
+            {/* Title Input */}
+            <input
+              type="text"
+              id="title"
+              className="text-3xl border-l-2 border-blue-300 w-full p-2 focus:outline-none focus:border-blue-600 transition"
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter Blog Title"
+              required
+            />
 
-            <div className="flex flex-wrap gap-2 mb-4">
+            {/* Format Buttons */}
+            <div className="flex flex-wrap gap-3">
               {formattingOptions.map((opt) => (
                 <button
                   key={opt.label}
                   type="button"
-                  className={`px-2 py-1 transition ${
+                  className={`px-3 py-1 rounded transition border text-sm ${
                     activeFormats.includes(opt.className)
-                      ? "bg-blue-500 text-white"
-                      : "bg-white text-black"
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
                   } ${opt.className}`}
                   onClick={() => toggleFormat(opt.className, opt.tagType)}
                 >
@@ -123,53 +109,49 @@ export const Create = () => {
               ))}
             </div>
 
-            <div>
-              <textarea
-                id="description"
-                rows={4}
-                className="indent-8 border-l-2 text-md w-full p-4 outline-none whitespace-pre-wrap"
-                onChange={(e) =>
-                  setInputDetails({
-                    ...inputDetails,
-                    children: e.target.value,
-                  })
-                }
-                // important 
-                value={inputDetails.children}
-                placeholder="Enter Text Type and Text "
-                required
-              ></textarea>
-            </div>
+            {/* Text Area */}
+            <textarea
+              id="description"
+              rows={4}
+              className="w-full border border-gray-300 rounded-md p-4 text-base outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              onChange={(e) =>
+                setInputDetails({
+                  ...inputDetails,
+                  children: e.target.value,
+                })
+              }
+              value={inputDetails.children}
+              placeholder="Write your content here..."
+            ></textarea>
 
-            <div className="flex flex-col gap-1 ">
-              <p className="font-bold underline mb-4">PREVIEW : </p>
-              <div className="flex justify-between ">
-          <h1 className="text-3xl font-bold text-gray-800 capitalize">{title}</h1>
-          <p className="text-sm text-gray-500">📅 Date: 28/01/2024</p>
-          </div>
-              <div className="flex whitespace-pre-wrap">
-              {totalContent.map((t, i) => (
-                <div key={i}>
-                  <DynamicText tag={t.tag} className={` ${t.className}`}>
-                    {t.children}
-                  </DynamicText>
+            {/* Live Preview */}
+            <div className="pt-4 border-t border-gray-200">
+              <p className="text-lg font-semibold mb-2 text-gray-700">📄 Preview</p>
+              <div className="bg-gray-100 p-4 rounded-md space-y-2">
+                <h1 className="text-2xl font-bold text-blue-800 capitalize">{title}</h1>
+                <p className="text-sm text-gray-500 mb-3">📅 Date: 28/01/2024</p>
+                <div className="flex flex-wrap gap-2 whitespace-pre-wrap">
+                  {totalContent.map((t, i) => (
+                    <DynamicText key={i} tag={t.tag} className={`${t.className}`}>
+                      {t.children}
+                    </DynamicText>
+                  ))}
+                  {inputDetails.children && (
+                    <DynamicText tag={inputDetails.tag} className={inputDetails.className}>
+                      {inputDetails.children}
+                    </DynamicText>
+                  )}
                 </div>
-              ))}
-              {/* live preview of current input */}
-              {inputDetails.children && (
-                <DynamicText tag={inputDetails.tag} className={inputDetails.className}>
-                  {inputDetails.children}
-                </DynamicText>
-              )}
               </div>
             </div>
 
+            {/* Submit Button */}
             <div className="text-center">
               <button
                 type="submit"
-                className="mt-2 bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow transition font-semibold"
               >
-                Post To Internet
+                ✨ Post to Internet
               </button>
             </div>
           </form>

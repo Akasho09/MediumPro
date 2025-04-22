@@ -27,25 +27,36 @@ export const Mainnnn = () => {
   }
 
   return (
-    <div className="grid grid-cols-3">
-      <div className="col-span-3 max-h-5px m-0 p-0">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100">
+      {/* Top Bar */}
+      <div className="shadow-sm sticky top-0 z-50 bg-white">
         <TopBar />
       </div>
 
-      <div className="col-span-3 flex justify-center">
+      {/* Subscription Bar */}
+      <div className="flex justify-center mt-4">
         <Subs />
       </div>
 
-      <div className="col-span-3 grid grid-cols-10">
-        <div className="col-start-3 col-span-6 flex flex-col">
-          <div className="border-b">
-            <Hashes r1="Web D" r2="Web D2" r3="web 3" />
+      {/* Content Section */}
+      <div className="max-w-7xl mx-auto mt-6 px-4 md:px-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        {/* Center Feed */}
+        <div className="md:col-start-3 md:col-span-8">
+          {/* Hashtags */}
+          <div className="border-b pb-2 mb-4">
+            <Hashes r1="Web D" r2="Web D2" r3="Web 3" />
           </div>
 
-          <div className="mt-4">
+          {/* Posts */}
+          <div className="space-y-6">
             {postss.slice().reverse().map((p) => (
-              <Link to={`/blog/${p.id}`} key={p.id} className="block mb-4">
-                <div className="p-4 border rounded shadow hover:shadow-lg transition">
+              <Link
+                to={`/blog/${p.id}`}
+                key={p.id}
+                className="block group transition-all duration-200"
+              >
+                <div className="p-6 rounded-2xl border border-gray-200 shadow-sm bg-white hover:shadow-md hover:border-gray-300 transition-all duration-300 ease-in-out">
                   <Posts
                     desc={isDynamicTextArray(p.content) ? p.content : []}
                     title={p.title}

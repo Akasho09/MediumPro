@@ -32,27 +32,44 @@ export const BlogHai = () => {
   const content = isDynamicTextArray(blog?.content) ? blog.content : [];
 
   return (
-    <div className="">
-      <div className=""><TopBar /></div>
-      <div className='flex justify-center'><Subs /></div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 text-gray-800">
+      <TopBar />
 
-      <div className="grid grid-rows-3 grid-cols-3">
-        <div className="row-span-3 col-span-2 p-4">
-          <div className="text-2xl font-bold mb-2">{blog?.title}</div>
-          <div className="text-gray-500 mb-4">Dated: 28/01/2024</div>
+      {/* Subscription Bar */}
+      <div className="flex justify-center mt-6 mb-4">
+        <Subs />
+      </div>
 
-          <div className="space-y-2">
+      {/* Main Blog Content */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6 md:px-8 pb-12">
+        {/* Blog Body */}
+        <div className="md:col-span-2 bg-white p-6 md:p-8 rounded-xl shadow-md space-y-6">
+          <h1 className="text-4xl font-extrabold tracking-tight leading-tight text-gray-900">
+            {blog?.title}
+          </h1>
+          <p className="text-sm text-gray-500">📅 Posted on: 28/01/2024</p>
+
+          <div className="space-y-4 text-lg leading-relaxed text-gray-700">
             {content.map((c, index) => (
-              <DynamicText key={index} tag={c.tag} className={c.className}>
+              <DynamicText key={index} tag={c.tag} className={`whitespace-pre-wrap ${c.className}`}>
                 {c.children}
               </DynamicText>
             ))}
           </div>
         </div>
 
-        <div className="col-span-1 row-span-2 pl-8 pt-8">
-          <div><DP /></div>
-          <div className="mt-2 font-medium text-lg">{blog?.author?.name || "Akash"}</div>
+        {/* Author Sidebar */}
+        <div className="md:sticky md:top-24">
+          <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center gap-2 transition hover:shadow-2xl duration-300">
+            <DP />
+            <div className="text-center">
+              <p className="font-semibold text-xl">{blog?.author?.name || "Akash"}</p>
+              <p className="text-sm text-gray-500">Author & Blogger</p>
+            </div>
+            <div className="mt-4 text-xs text-gray-400 italic">
+              "Sharing ideas, one blog at a time."
+            </div>
+          </div>
         </div>
       </div>
     </div>
