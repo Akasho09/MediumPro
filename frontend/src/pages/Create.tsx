@@ -5,56 +5,54 @@ import { useNavigate } from "react-router-dom";
 import TopBar from "./TopBar";
 
 export interface DynamicTextProps {
-  tag: keyof JSX.IntrinsicElements;
   children: string;
   className?: string;
 }
 
-export const DynamicText = ({ tag, children, className }: DynamicTextProps) => {
-  const Tag = tag;
-  return <Tag className={`${className || ""}`}>{children}</Tag>;
+export const DynamicText = ({ children, className }: DynamicTextProps) => {
+  return <div className={`${className || ""}`}>{children}</div>;
 };
 
-type FormattingOption = {
-  label: string;
-  className: string;
-  tagType: keyof JSX.IntrinsicElements;
-};
-
-const formattingOptions: FormattingOption[] = [
-  { label: "M", className: "", tagType: "p" },
-  { label: "B", className: "font-bold", tagType: "b" },
-  { label: "I", className: "italic", tagType: "i" },
-  { label: "U", className: "underline", tagType: "u" },
-  { label: "S", className: "line-through", tagType: "s" },
-  { label: "UP", className: "uppercase", tagType: "span" },
-  { label: "lo", className: "lowercase", tagType: "span" },
+const formattingOptions: string[] = [
+  "text-md",
+  "font-bold",
+  "italic",
+  "underline",
+  "line-through",
+  "uppercase text-lg",
+  "text-xl",
+  "italic text-right",
+  "tracking-widest",
+  "text-center",
+  "indent-8", // Indentation
 ];
 
 export const Create = () => {
   const [title, setTitle] = useState<string>("");
-  const [activeFormats, setActiveFormats] = useState<string[]>([]);
-
+  const [activeFormats, setActiveFormats] = useState<string>("");
   const [inputDetails, setInputDetails] = useState<DynamicTextProps>({
-    tag: "p",
     children: "",
     className: "",
   });
+  const [totalContent, setTotalContent] = useState<DynamicTextProps[]>([]);
+  const navigate = useNavigate();
 
-  const [totalContent, setTC] = useState<DynamicTextProps[]>([]);
-  const Navigate = useNavigate();
-
-  const toggleFormat = (formatClass: string, tagType: keyof JSX.IntrinsicElements) => {
-    setTC((prev) => [...prev, inputDetails]);
-    setActiveFormats((prev) =>
-      prev.includes(formatClass)
-        ? prev.filter((cls) => cls !== formatClass)
-        : [...prev, formatClass]
-    );
-    setInputDetails({
-      tag: tagType,
+  const toggleFormat = (formatClass: string) => {
+    setActiveFormats(formatClass);
+    setInputDetails((prev) => ({
+      ...prev,
       className: formatClass,
+    }));
+  };
+
+  const onAdd = () => {
+    setTotalContent((prev) => [
+      ...prev,
+      { ...inputDetails, children: inputDetails.children.trim() },
+    ]);
+    setInputDetails({
       children: "",
+      className: "",
     });
   };
 
@@ -66,10 +64,10 @@ export const Create = () => {
         { title, content: totalContent },
         { headers: { Authorization: localStorage.getItem("jwt") } }
       );
-      Navigate("/blogs");
+      navigate("/blogs");
       console.log(res);
     } catch (e) {
-      console.log("Error : ", e);
+      console.log("Error: ", e);
     }
   }
 
@@ -77,67 +75,101 @@ export const Create = () => {
     <div className="min-h-screen text-gray-800 bg-gray-50">
       <TopBar />
       <main className="container mx-auto px-4 py-8">
-        <h2 className="text-4xl font-extrabold text-center text-blue-400 mb-8">Create a New Blog Post</h2>
+        <h2 className="text-4xl font-extrabold text-center text-blue-400 mb-8">
+          Create a New Blog Post
+        </h2>
 
         <div className="max-w-5xl mx-auto bg-slate-250 p-8 shadow-lg rounded-lg space-y-8">
-          <form onSubmit={handleClick} className="space-y-6">
+          <form className="space-y-6" onSubmit={handleClick}>
             {/* Title Input */}
             <input
               type="text"
               id="title"
-              className="text-3xl border-l-2 border-blue-300 w-full p-2 focus:outline-none focus:border-blue-600 transition"
+              className="text-4xl border-l-2 border-blue-300 w-full p-2 focus:outline-none focus:border-blue-600 transition"
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter Blog Title"
               required
             />
 
             {/* Format Buttons */}
-            <div className="flex flex-wrap gap-3">
-              {formattingOptions.map((opt) => (
-                <button
-                  key={opt.label}
-                  type="button"
-                  className={`px-3 py-1 rounded transition border text-sm ${
-                    activeFormats.includes(opt.className)
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-gray-200"
-                  } ${opt.className}`}
-                  onClick={() => toggleFormat(opt.className, opt.tagType)}
-                >
-                  {opt.label}
-                </button>
-              ))}
+            <div className="flex">
+              <div className="flex justify-center items-center border-r-2 mr-2 p-0">
+                Available typecasts
+              </div>
+              <div className="w-full flex flex-col gap-3">
+                {formattingOptions.map((opt) => (
+                  <div
+                    key={opt}
+                    className={`px-3 py-1 rounded transition border text-sm bg-gray-100 text-gray-800 ${
+                      activeFormats === opt
+                        ? "border-4 border-blue-600"
+                        : "border-gray-300 hover:bg-gray-200"
+                    } ${opt}`}
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent form submit
+                        e.stopPropagation(); // Prevent bubbling up
+                        toggleFormat(opt);
+                      }}
+                      className={opt}
+                    >
+                      {opt}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Text Area */}
-            <textarea
-              id="description"
-              rows={4}
-              className="w-full border border-gray-300 rounded-md p-4 text-base outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              onChange={(e) =>
-                setInputDetails({
-                  ...inputDetails,
-                  children: e.target.value,
-                })
-              }
-              value={inputDetails.children}
-              placeholder="Write your content here..."
-            ></textarea>
+            {/* Current Content */}
+            <div className="flex">
+              <div className="flex justify-center items-center border-r-2 mr-2 p-0">
+                Current content
+              </div>
+              <div className="w-full">
+                <textarea
+                  id="description"
+                  rows={4}
+                  className="w-full border border-gray-300 rounded-md p-4 text-base outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  onChange={(e) =>
+                    setInputDetails({
+                      ...inputDetails,
+                      children: e.target.value,
+                    })
+                  }
+                  value={inputDetails.children}
+                  placeholder="Write your content here..."
+                ></textarea>
+              </div>
+              <div className="flex flex-col justify-center items-center">
+                <label htmlFor="" className="text-xs ml-2">
+                  Add Current content to Blog
+                </label>
+                <button
+                  onClick={onAdd}
+                  className="flex justify-center items-center w-10 h-10 bg-green-300 border rounded-full"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+            </div>
 
             {/* Live Preview */}
-            <div className="pt-4 border-t border-gray-200">
+            <div className="w-full pt-4 border-t border-gray-200">
               <p className="text-lg font-semibold mb-2 text-gray-700">📄 Preview</p>
               <div className="bg-gray-100 p-4 rounded-md space-y-2">
                 <h1 className="text-2xl font-bold text-blue-800 capitalize">{title}</h1>
                 <p className="text-sm text-gray-500 mb-3">📅 Date: 28/01/2024</p>
-                <div className="flex flex-wrap gap-2 whitespace-pre-wrap">
-                  {totalContent.map((t, i) => (
-                    <DynamicText key={i} tag={t.tag} className={`${t.className}`}>
-                      {t.children}
+                <div className="text-lg text-gray-700">
+                  {totalContent.map((c, index) => (
+                    <DynamicText key={index} className={c.className}>
+                      {c.children}
                     </DynamicText>
                   ))}
                   {inputDetails.children && (
-                    <DynamicText tag={inputDetails.tag} className={inputDetails.className}>
+                    <DynamicText className={inputDetails.className}>
                       {inputDetails.children}
                     </DynamicText>
                   )}

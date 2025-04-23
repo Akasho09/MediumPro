@@ -13,7 +13,6 @@ function isDynamicTextArray(data: any): data is DynamicTextProps[] {
     data.every(
       (item) =>
         typeof item === 'object' &&
-        typeof item.tag === 'string' &&
         typeof item.children === 'string'
     )
   );
@@ -49,9 +48,9 @@ export const BlogHai = () => {
           </h1>
           <p className="text-sm text-gray-500">📅 Posted on: 28/01/2024</p>
 
-          <div className="space-y-4 text-lg leading-relaxed text-gray-700">
+          <div className="space-y-4 text-lg text-gray-700">
             {content.map((c, index) => (
-              <DynamicText key={index} tag={c.tag} className={`whitespace-pre-wrap ${c.className}`}>
+              <DynamicText key={index} className={` ${c.className}`}>
                 {c.children}
               </DynamicText>
             ))}

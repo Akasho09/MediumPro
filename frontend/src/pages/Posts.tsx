@@ -33,8 +33,7 @@ export default function Posts({ desc, title, author }: PostDetails) {
     {desc?.map((d, index) => (
       <DynamicText
         key={index}
-        tag={d.tag}
-        className={`${d.className || ''}`}
+        className={`${d.className}`}
       >
         {d.children}
       </DynamicText>

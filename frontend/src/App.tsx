@@ -23,7 +23,6 @@ import { BlogHai } from './empS/SpecificBlog'
         <div className='lg:col-span-2 flex justify-center items-center invisible lg:visible'><Quote ></Quote></div></div>}>
         </Route>
 
-
         <Route path="/blogs" element={<div className=''><Mainnnn/></div>}></Route>
         <Route path="/blog/:id" element={<BlogHai/>}></Route>
         <Route path="/create" element={<div><Create/></div>}></Route>
